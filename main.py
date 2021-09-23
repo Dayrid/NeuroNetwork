@@ -4,6 +4,7 @@ import SQL
 import restore_data
 import pandas as pd
 import numpy as np
+import copy
 
 pd.options.display.max_columns = None
 pd.options.display.max_rows = None
@@ -19,8 +20,8 @@ class Preprocessing:
         else:
             df = self.xlsx_read(self.params['pathtofile'])
         restoring = restore_data.DataRestore(df, self.params)
-        raw_data = restoring.raw_data
-        print(raw_data)
+        self.raw_data = restoring.raw_data
+        self.min_max = []
 
     def xlsx_read(self, filename):
         # Чтение из xlsx формата
@@ -35,6 +36,24 @@ class Preprocessing:
         config.read(name, encoding="utf-8")
         array = dict(config.items('Settings'))
         return array
+
+    def normalize(self):
+        max = np.array(self.raw_data[self.params['selectedcols']].max().values.tolist())
+        min = np.array(self.raw_data[self.params['selectedcols']].min().values.tolist())
+        print(min, max)
+        self.raw_data[self.params['selectedcols']] = (self.raw_data[self.params['selectedcols']] - min) / (max - min)
+        self.min_max += [min, max]
+
+    def denormalize(self):
+        self.raw_data[self.params['selectedcols']] = self.raw_data[self.params['selectedcols']] * (
+                self.min_max[1] - self.min_max[0]) + self.min_max[0]
+
+    @staticmethod
+    def data_split(data: list, n: int):
+        new_data = []
+        for i in range(len(data) - n + 1):
+            new_data.append(copy.deepcopy(data[i:i + n]))
+        return new_data
 
 
 a = Preprocessing()  # main1
