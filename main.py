@@ -48,12 +48,8 @@ class Preprocessing:
         self.raw_data[self.params['selectedcols']] = self.raw_data[self.params['selectedcols']] * (
                 self.min_max[1] - self.min_max[0]) + self.min_max[0]
 
-    @staticmethod
-    def data_split(data: list, n: int):
-        new_data = []
-        for i in range(len(data) - n + 1):
-            new_data.append(copy.deepcopy(data[i:i + n]))
-        return new_data
+    def cube_formation(self):
+        pass
 
 
 a = Preprocessing()  # main1
