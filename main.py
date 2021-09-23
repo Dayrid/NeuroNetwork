@@ -3,6 +3,7 @@ import json
 import SQL
 import restore_data
 
+
 class Preprocessing:
     def __init__(self):
         self.params = self.config('Settings.ini')
