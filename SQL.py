@@ -6,7 +6,7 @@ import configparser
 
 class SQL:
     def __init__(self):
-        params = self.cfg('/home/floodrb/sites/floodrb.ugatu.su/neuro/db.ini')
+        params = self.cfg('db.ini')
         self.df = self.sql_to_df(params['db_name'], params['username'], params['password'], params['hostname'],
                                  int(params['port']), params['table'], params['charset'])
 

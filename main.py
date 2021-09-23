@@ -6,7 +6,8 @@ import SQL
 class Preprocessing:
     def __init__(self):
         self.params = self.config('Settings.ini')
-        df = SQL.SQL()
+        sql = SQL.SQL()
+        df = sql.df
         print(df)
 
     @staticmethod
