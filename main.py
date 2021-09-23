@@ -37,4 +37,4 @@ class Preprocessing:
         return array
 
 
-a = Preprocessing()
+a = Preprocessing()  # main
