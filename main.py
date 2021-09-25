@@ -25,7 +25,7 @@ class Preprocessing:
         self.raw_data = restoring.raw_data
         # print(self.raw_data.tail(11))
         self.min_max = []
-        self.cube_formation()
+        self.train_x, self.x_full_data, self.train_y, self.y_full_data = self.cube_formation()
 
     def xlsx_read(self, filename):
         # Чтение из xlsx формата
@@ -89,10 +89,11 @@ class Preprocessing:
         predict_data = np.array(predict_data)
         # print(predict_data)
 
-        for i in range(len(selection_full_data)):
-            print(50*"-")
-            print(selection_full_data[i])
-            print(predict_full_data[i])
+        # for i in range(len(selection_full_data)):
+        #     print(50*"-")
+        #     print(selection_full_data[i])
+        #     print(predict_full_data[i])
+        return selection_data, selection_full_data, predict_data, predict_full_data
 
 
-a = Preprocessing()  # main1
+a = Preprocessing() # main1
