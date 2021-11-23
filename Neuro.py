@@ -72,16 +72,25 @@ class NeuroNetwork:
     def test(self):
         history = self.model.evaluate(self.data.test_x, self.data.test_y)
         print(history)
+
+        mean_error = np.array([0.0 for i in range(len(self.data.test_y[0]))])
+        print(mean_error.shape)
+
+        print(mean_error)
+
         for i in range(len(self.data.test_x)):
             x = self.data.test_x[i]
             y = self.data.test_y[i]
             predict = self.predict(x)
             print("Predict:")
-            print(predict)
+            print(predict[0])
             print("Real")
             print(y)
             print("Error:")
-            print(y - predict, end="\n==================\n")
+            print(y - predict[0], end="\n==================\n")
+            mean_error += abs(y - predict[0])
+
+        print(mean_error / len(self.data.test_x))
         pass
 
 
