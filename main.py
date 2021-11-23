@@ -27,7 +27,7 @@ class Preprocessing:
         # print(self.raw_data.tail(11))
         self.min_max = []
         self.train_x, self.x_full_data, self.train_y, self.y_full_data = self.cube_formation()
-        self.make_test_selection(self.train_x, self.train_y)
+        self.train_x, self.train_y, self.test_x, self.test_y = self.make_test_selection(self.train_x, self.train_y)
 
 
     def xlsx_read(self, filename):
