@@ -70,14 +70,21 @@ class NeuroNetwork:
         return self.model.predict(data)
 
     def test(self):
-        self.model.evaluate()
+        history = self.model.evaluate(self.data.test_x, self.data.test_y)
+        print(history)
+        for i in range(len(self.data.test_x)):
+            x = self.data.test_x[i]
+            y = self.data.test_y[i]
+            predict = self.predict(x)
+            print("Predict:")
+            print(predict)
+            print("Real")
+            print(y)
+            print("Error:")
+            print(y - predict, end="\n==================\n")
         pass
 
 
 net = NeuroNetwork()
 net.fit()
-data = net.data.train_x[-1]
-
-print(data.shape)
-print(data)
-print(data)
+net.test()

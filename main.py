@@ -105,4 +105,5 @@ class Preprocessing:
         test_x, test_y = raw_train_x[train_len:], raw_train_y[train_len:]
         print(len(train_x), len(test_x), array_len)
         return train_x, train_y, test_x, test_y
+
 a = Preprocessing() # main1
