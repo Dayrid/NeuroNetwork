@@ -26,8 +26,8 @@ class Preprocessing:
         self.raw_data = restoring.raw_data
         # print(self.raw_data.tail(11))
         self.min_max = []
-        self.train_x, self.x_full_data, self.train_y, self.y_full_data = self.cube_formation()
-        self.train_x, self.train_y, self.test_x, self.test_y = self.make_test_selection(self.train_x, self.train_y)
+        self.train_x, self.x_full_data, self.train_y, self.y_full_data, self.train_x_dates, self.train_y_dates = self.cube_formation()
+        self.train_x, self.train_y, self.test_x, self.test_y, self.train_x_dates, self.train_y_dates, self.test_x_dates, self.test_y_dates = self.make_test_selection(self.train_x, self.train_y)
 
 
     def xlsx_read(self, filename):
@@ -96,13 +96,12 @@ class Preprocessing:
         #     print(50*"-")
         #     print(selection_full_data[i])
         #     print(predict_full_data[i])
-        return selection_data, selection_full_data, predict_data, predict_full_data
+        return selection_data, selection_full_data, predict_data, predict_full_data, selection_dates, predict_dates
 
     def make_test_selection(self, raw_train_x, raw_train_y):
         array_len = len(raw_train_x)
         train_len = array_len - 1 - int(array_len * self.params['test_selection_size'])
-        train_x, train_y = raw_train_x[:train_len], raw_train_y[:train_len]
-        test_x, test_y = raw_train_x[train_len:], raw_train_y[train_len:]
-        print(len(train_x), len(test_x), array_len)
-        return train_x, train_y, test_x, test_y
+        train_x, train_y, train_x_dates, train_y_dates = raw_train_x[:train_len], raw_train_y[:train_len], self.train_x_dates[:train_len], self.train_y_dates[:train_len]
+        test_x, test_y, test_x_dates, test_y_dates = raw_train_x[train_len:], raw_train_y[train_len:], self.train_x_dates[train_len:], self.train_y_dates[train_len:]
+        return train_x, train_y, test_x, test_y, train_x_dates, train_y_dates, test_x_dates, test_y_dates
 a = Preprocessing() # main1
