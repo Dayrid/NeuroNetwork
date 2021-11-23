@@ -16,6 +16,7 @@ class Preprocessing:
         self.params['selectedcols'] = self.params['selectedcols'].split(',')
         self.params['selection_size'] = int(self.params['selection_size'])
         self.params['predict_size'] = int(self.params['predict_size'])
+        self.params['test_selection_size'] = float(self.params['test_selection_size'])
         if self.params['sql_reading'].lower() == 'on':
             sql = SQL.SQL(self.params['hydropost'])
             df = sql.df
@@ -26,6 +27,8 @@ class Preprocessing:
         # print(self.raw_data.tail(11))
         self.min_max = []
         self.train_x, self.x_full_data, self.train_y, self.y_full_data = self.cube_formation()
+        self.make_test_selection(self.train_x, self.train_y)
+
 
     def xlsx_read(self, filename):
         # Чтение из xlsx формата
@@ -95,5 +98,11 @@ class Preprocessing:
         #     print(predict_full_data[i])
         return selection_data, selection_full_data, predict_data, predict_full_data
 
-
+    def make_test_selection(self, raw_train_x, raw_train_y):
+        array_len = len(raw_train_x)
+        train_len = array_len - 1 - int(array_len * self.params['test_selection_size'])
+        train_x, train_y = raw_train_x[:train_len], raw_train_y[:train_len]
+        test_x, test_y = raw_train_x[train_len:], raw_train_y[train_len:]
+        print(len(train_x), len(test_x), array_len)
+        return train_x, train_y, test_x, test_y
 a = Preprocessing() # main1
