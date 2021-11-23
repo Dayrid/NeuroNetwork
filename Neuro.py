@@ -8,6 +8,22 @@ import pandas as pd
 import main
 
 
+def plot_train_history(history, title):
+    loss = history.history['mae']
+    val_loss = history.history['val_mae']
+
+    epochs = range(len(loss))
+
+    plt.figure()
+
+    plt.plot(epochs, loss, 'b', label='Training loss')
+    plt.plot(epochs, val_loss, 'r', label='Validation loss')
+    plt.title(title)
+    plt.legend()
+
+    plt.show()
+
+
 class NeuroNetwork:
     data = main.Preprocessing()
 
@@ -43,14 +59,25 @@ class NeuroNetwork:
         self.model.compile(loss='mse', optimizer='Adam', metrics='mae')
 
         # Обучение
-        history = self.model.fit(train_x, train_y, epochs=200, batch_size=10, validation_split=0.2)
+        history = self.model.fit(train_x, train_y, epochs=2, batch_size=10, validation_split=0.2)
 
+        # Вывод графика процесса обучения
+        plot_train_history(history, "Процесс обучения")
         pass
 
     def predict(self, data):
+        data = np.array(data).reshape((1, 6, 2))
         return self.model.predict(data)
 
     def test(self):
+        self.model.evaluate()
         pass
 
 
+net = NeuroNetwork()
+net.fit()
+data = net.data.train_x[-1]
+
+print(data.shape)
+print(data)
+print(data)
