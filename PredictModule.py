@@ -22,8 +22,15 @@ def Predict(json_settings):
     print(data.shape)
     net = Neuro.NeuroNetwork(data.shape)
     predict = net.predict(data)
-
     print(predict)
+    full_predict = []
+    if json_settings['id'] != -1:
+        end_date = datetime.datetime.strptime(json_settings['end_date'], '%Y-%m-%d')
+        for i in range(len(predict[0])):
+            end_date += datetime.timedelta(days=1)
+            full_predict.append([end_date.strftime('%Y-%m-%d'), predict[0][i]])
+    print(full_predict)
+
 
 
 def cfg(filename):
