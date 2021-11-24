@@ -17,7 +17,6 @@ def Predict(json_settings):
     start_date = datetime.datetime.strptime(json_settings['end_date'], '%Y-%m-%d')
     start_date -= datetime.timedelta(days=int(json_settings['selection_size']) - 1)
     query = f"SELECT `Уровень воды`, `Температура воздуха` FROM `{sql_cfg['table']}` WHERE `Код поста` = {json_settings['hydropost']} AND `Дата - время` BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{json_settings['end_date']}'"
-    print(query)
     cur.execute(query)
     data = np.array(cur.fetchall())
     print(data.shape)
