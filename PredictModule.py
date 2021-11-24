@@ -1,4 +1,4 @@
-# import Neuro as net
+import Neuro
 # import main
 import configparser
 import pymysql
@@ -20,7 +20,10 @@ def Predict(json_settings):
     print(query)
     cur.execute(query)
     data = np.array(cur.fetchall())
-    print(data)
+    print(data.shape)
+    net = Neuro.NeuroNetwork(data.shape)
+    predict = net.predict(data)
+    print(predict)
 
 
 def cfg(filename):

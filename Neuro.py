@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
-import main
 
 
 def plot_train_history(history, title):
@@ -94,7 +93,3 @@ class NeuroNetwork:
         pass
 
 
-data = main.Preprocessing()
-net = NeuroNetwork(data.train_x.shape[1:])
-net.fit(data)
-net.test(data.test_x, data.test_y)
