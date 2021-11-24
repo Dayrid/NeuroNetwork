@@ -30,6 +30,7 @@ class Preprocessing:
         self.train_x, self.train_y, self.test_x, self.test_y, self.train_x_dates, self.train_y_dates, self.test_x_dates, self.test_y_dates = self.make_test_selection(self.train_x, self.train_y)
 
 
+
     def xlsx_read(self, filename):
         # Чтение из xlsx формата
         dfs = pd.read_excel(filename, sheet_name='Уровни', engine='openpyxl')
@@ -104,4 +105,5 @@ class Preprocessing:
         train_x, train_y, train_x_dates, train_y_dates = raw_train_x[:train_len], raw_train_y[:train_len], self.train_x_dates[:train_len], self.train_y_dates[:train_len]
         test_x, test_y, test_x_dates, test_y_dates = raw_train_x[train_len:], raw_train_y[train_len:], self.train_x_dates[train_len:], self.train_y_dates[train_len:]
         return train_x, train_y, test_x, test_y, train_x_dates, train_y_dates, test_x_dates, test_y_dates
+
 a = Preprocessing() # main1
