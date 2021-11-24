@@ -25,9 +25,8 @@ def plot_train_history(history, title):
 
 
 class NeuroNetwork:
-    data = main.Preprocessing()
 
-    def __init__(self, filename=None):
+    def __init__(self, shape, filename=None):
         """
         Конструктор класса нейросети.
         :param filename: расположение файла с моделью нейросети
@@ -39,7 +38,7 @@ class NeuroNetwork:
             self.model = tf.keras.Sequential()  # Создание модели через конструктор
 
             #   Добавление входного слоя
-            self.model.add(tf.keras.layers.Dense(30, input_shape=self.data.train_x.shape[1:], activation='linear'))
+            self.model.add(tf.keras.layers.Dense(30, input_shape=shape, activation='linear'))
 
             # Добавление скрытых слоёв
             self.model.add(tf.keras.layers.SimpleRNN(150, activation='tanh', return_sequences=True))
@@ -49,11 +48,12 @@ class NeuroNetwork:
             self.model.add(tf.keras.layers.Dense(5, activation='linear'))
         pass
 
-    def fit(self):
+    def fit(self, data):
         """
         Обучение нейросети
         """
-        train_x, train_y = self.data.train_x, self.data.train_y  # Создание тренировочной выборки
+
+        train_x, train_y = data.train_x, data.train_y  # Создание тренировочной выборки
 
         # Выбор функции ошибки и метода оптимизации градиентного спуска
         self.model.compile(loss='mse', optimizer='Adam', metrics='mae')
@@ -69,18 +69,18 @@ class NeuroNetwork:
         data = np.array(data).reshape((1, 6, 2))
         return self.model.predict(data)
 
-    def test(self):
-        history = self.model.evaluate(self.data.test_x, self.data.test_y)
+    def test(self, test_x, test_y):
+        history = self.model.evaluate(test_x, test_y)
         print(history)
 
-        mean_error = np.array([0.0 for i in range(len(self.data.test_y[0]))])
+        mean_error = np.array([0.0 for i in range(len(test_y[0]))])
         print(mean_error.shape)
 
         print(mean_error)
 
-        for i in range(len(self.data.test_x)):
-            x = self.data.test_x[i]
-            y = self.data.test_y[i]
+        for i in range(len(test_x)):
+            x = test_x[i]
+            y = test_y[i]
             predict = self.predict(x)
             print("Predict:")
             print(predict[0])
@@ -90,10 +90,11 @@ class NeuroNetwork:
             print(y - predict[0], end="\n==================\n")
             mean_error += abs(y - predict[0])
 
-        print(mean_error / len(self.data.test_x))
+        print(mean_error / len(test_x))
         pass
 
 
-net = NeuroNetwork()
-net.fit()
-net.test()
+data = main.Preprocessing()
+net = NeuroNetwork(data.train_x.shape[1:])
+net.fit(data)
+net.test(data.test_x, data.test_y)
