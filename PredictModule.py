@@ -22,6 +22,7 @@ def Predict(json_settings):
     print(data.shape)
     net = Neuro.NeuroNetwork(data.shape)
     predict = net.predict(data)
+
     print(predict)
 
 
