@@ -7,6 +7,7 @@ from restore_methods import naiveBayes, imputers
 class DataRestore:
     def __init__(self, df, params):
         df = self.cutting(df, params)
+        df = self.dates_selection(df)
         new_df = df
         if params['restore_data'].lower() != 'off':
             missed_date_df = self.fill_missed_date(df, params)
@@ -31,6 +32,13 @@ class DataRestore:
             df = df.drop(date_idx)
             print('Файл готов к обработке.')
             return df
+
+    @staticmethod
+    def dates_selection(df):
+        for i, row in df.iterrows():
+            if not 3 <= row['Дата - время'].month <= 5:
+                df = df.drop(i)
+        return df
 
     @staticmethod
     def fill_missed_date(df, params):
