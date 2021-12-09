@@ -5,7 +5,6 @@ import numpy as np
 import os
 import pandas as pd
 
-
 import main
 
 
@@ -60,7 +59,7 @@ class NeuroNetwork:
         self.model.compile(loss='mse', optimizer='Adam', metrics='mae')
 
         # Обучение
-        history = self.model.fit(train_x, train_y, epochs=75, batch_size=10, validation_split=0.2)
+        history = self.model.fit(train_x, train_y, epochs=60, batch_size=5, validation_split=0.2)
 
         # Вывод графика процесса обучения
         plot_train_history(history, "Процесс обучения")
@@ -69,6 +68,12 @@ class NeuroNetwork:
     def predict(self, data):
         data = np.array(data).reshape((1, 6, 2))
         return self.model.predict(data)
+
+    @staticmethod
+    def denormalize(predict, min_max):
+        min_max = np.array(min_max).T
+        predict = predict * (min_max[0][1] - min_max[0][0]) + min_max[0][0]
+        return predict
 
     def test(self, test_x, test_y):
         history = self.model.evaluate(test_x, test_y)
@@ -82,7 +87,8 @@ class NeuroNetwork:
         for i in range(len(test_x)):
             x = test_x[i]
             y = test_y[i]
-            predict = self.predict(x)
+            predict = self.denormalize(self.predict(x), data.min_max)
+            y = self.denormalize(y, data.min_max)
             print("Predict:")
             print(predict[0])
             print("Real")
@@ -93,11 +99,14 @@ class NeuroNetwork:
 
         print(mean_error / len(test_x))
         pass
+
     def save(self, name):
         self.model.save(name)
 
 
 data = main.Preprocessing()
+# net = NeuroNetwork(data.train_x.shape[1:], "76289-5.h5")
+# net.test(data.test_x, data.test_y)
 net = NeuroNetwork(data.train_x.shape[1:])
 net.fit(data)
-net.save('76289-5.h5')
+net.save('76289-5-1.h5')

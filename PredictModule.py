@@ -62,7 +62,7 @@ json_data = """
 	"selection_size" : 6,
 	"predict_size" : 5,
 	"id" : 123,
-	"model_path" : "76279-5.h5"
+	"model_path" : "76289-5.h5"
 }
 """
 Predict(json_data)
