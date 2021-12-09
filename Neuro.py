@@ -6,7 +6,7 @@ import os
 import pandas as pd
 
 
-# import main
+import main
 
 
 def plot_train_history(history, title):
@@ -97,7 +97,7 @@ class NeuroNetwork:
         self.model.save(name)
 
 
-# data = main.Preprocessing()
-# net = NeuroNetwork(data.train_x.shape[1:])
-# net.fit(data)
-# net.save('76279-5.h5')
+data = main.Preprocessing()
+net = NeuroNetwork(data.train_x.shape[1:])
+net.fit(data)
+net.save('76289-5.h5')

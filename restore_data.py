@@ -39,6 +39,7 @@ class DataRestore:
         for i, row in df.iterrows():
             if not 3 <= row['Дата - время'].month <= 5:
                 df = df.drop(i)
+        df = df.reset_index()
         return df
 
     @staticmethod
