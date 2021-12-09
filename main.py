@@ -79,7 +79,6 @@ class Preprocessing:
 
         df = self.raw_data
         columns = self.params['selectedcols']
-
         for i in range(len(df) - self.params['predict_size'] - self.params['selection_size'] + 1):
             selection_dates.append(df.loc[i:i+self.params['selection_size']-1, 'Дата - время'].astype(str).values.tolist())
             selection_data.append(df.loc[i:i+self.params['selection_size']-1, columns].values.tolist())
