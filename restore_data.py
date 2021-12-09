@@ -1,13 +1,14 @@
 import datetime
 import pandas as pd
 import numpy as np
+import copy
 from restore_methods import naiveBayes, imputers
 
 
 class DataRestore:
     def __init__(self, df, params):
         df = self.cutting(df, params)
-        df = self.dates_selection(df)
+        print(len(df))
         new_df = df
         if params['restore_data'].lower() != 'off':
             missed_date_df = self.fill_missed_date(df, params)
@@ -15,10 +16,10 @@ class DataRestore:
                 new_df = self.naive_bayes_restoring(missed_date_df, params)
             elif params['restore_data'] in ['knn', 'iter', 'mean']:
                 new_df = self.imputers_restoring(missed_date_df, params, params['restore_data'], 5)
-            self.raw_data = new_df
         else:
             print('Восстановление данных отключено.')
-            self.raw_data = new_df
+        self.raw_data = new_df
+        self.raw_data = self.dates_selection(self.raw_data)
 
     @staticmethod
     def cutting(df, params):
@@ -53,7 +54,7 @@ class DataRestore:
             else:
                 df = df.set_index('Дата - время').fillna(np.nan)
                 df = df.reset_index()
-                df = df.rename(columns={'index': 'Дата - время'}, inplace=True)
+                df.rename(columns={'index': 'Дата - время'}, inplace=True)
             return df
 
     @staticmethod
