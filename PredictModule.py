@@ -58,11 +58,11 @@ def cfg(filename):
 json_data = """
 {
 	"hydropost" : 76289,
-	"end_date" : "2021-04-28",
+	"end_date" : "2021-04-15",
 	"selection_size" : 6,
 	"predict_size" : 5,
 	"id" : 123,
-	"model_path" : "76289-5.h5"
+	"model_path" : "76289-5-1.h5"
 }
 """
 Predict(json_data)

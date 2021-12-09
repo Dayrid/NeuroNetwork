@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
+tf.config.threading.set_inter_op_parallelism_threads(12)
+tf.config.threading.set_intra_op_parallelism_threads(12)
 
 import main
 
@@ -59,7 +61,7 @@ class NeuroNetwork:
         self.model.compile(loss='mse', optimizer='Adam', metrics='mae')
 
         # Обучение
-        history = self.model.fit(train_x, train_y, epochs=60, batch_size=5, validation_split=0.2)
+        history = self.model.fit(train_x, train_y, epochs=100, batch_size=5, validation_split=0.2, use_multiprocessing = True)
 
         # Вывод графика процесса обучения
         plot_train_history(history, "Процесс обучения")
@@ -105,8 +107,8 @@ class NeuroNetwork:
 
 
 data = main.Preprocessing()
-# net = NeuroNetwork(data.train_x.shape[1:], "76289-5.h5")
-# net.test(data.test_x, data.test_y)
 net = NeuroNetwork(data.train_x.shape[1:])
 net.fit(data)
-net.save('76289-5-1.h5')
+net.test(data.test_x, data.test_y)
+if input("Сохранить модель? +/-") == "+":
+    net.save('76289-3.h5')
