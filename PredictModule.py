@@ -6,7 +6,16 @@ import json
 import datetime
 import numpy as np
 
-
+def normalize(data, min_max):
+    min_max = min_max.T
+    min_arr = np.array([min(min_max[i]) for i in range(len(min_max))])
+    max_arr = np.array([max(min_max[i]) for i in range(len(min_max))])
+    data = (data - min_arr) / (max_arr - min_arr)
+    return data
+def denormalize(predict, min_max):
+    min_max = min_max.T
+    predict = predict*(min_max[0][1] - min_max[0][0]) + min_max[0][0]
+    return predict
 def Predict(json_settings):
     sql_cfg = cfg("db.ini")
     con = pymysql.connect(host=sql_cfg['hostname'], port=int(sql_cfg['port']), user=sql_cfg['username'],
@@ -19,9 +28,15 @@ def Predict(json_settings):
     query = f"SELECT `Уровень воды`, `Температура воздуха` FROM `{sql_cfg['table']}` WHERE `Код поста` = {json_settings['hydropost']} AND `Дата - время` BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{json_settings['end_date']}'"
     cur.execute(query)
     data = np.array(cur.fetchall())
-    print(data.shape)
-    net = Neuro.NeuroNetwork(data.shape)
+    print(data)
+    query = f"SELECT MIN(`Уровень воды`), MIN(`Температура воздуха`) as min, MAX(`Уровень воды`), MAX(`Температура воздуха`) as max FROM `{sql_cfg['table']}` WHERE `Код поста` = {json_settings['hydropost']}"
+    cur.execute(query)
+    min_max = np.array(cur.fetchall())
+    min_max = min_max.reshape((len(min_max[0])//2, 2))
+    data = normalize(data, min_max)
+    net = Neuro.NeuroNetwork(data.shape, json_settings["model_path"])
     predict = net.predict(data)
+    predict = denormalize(predict, min_max)
     print(predict)
     full_predict = []
     if json_settings['id'] != -1:
@@ -43,11 +58,11 @@ def cfg(filename):
 json_data = """
 {
 	"hydropost" : 76289,
-	"end_date" : "2020-05-03",
+	"end_date" : "2021-04-28",
 	"selection_size" : 6,
 	"predict_size" : 5,
 	"id" : 123,
-	"model_path" : "//"
+	"model_path" : "76279-5.h5"
 }
 """
 Predict(json_data)

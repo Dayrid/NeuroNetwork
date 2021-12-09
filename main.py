@@ -26,6 +26,7 @@ class Preprocessing:
         self.raw_data = restoring.raw_data
         # print(self.raw_data.tail(11))
         self.min_max = []
+        self.normalize()
         self.train_x, self.x_full_data, self.train_y, self.y_full_data, self.train_x_dates, self.train_y_dates = self.cube_formation()
         self.train_x, self.train_y, self.test_x, self.test_y, self.train_x_dates, self.train_y_dates, self.test_x_dates, self.test_y_dates = self.make_test_selection(self.train_x, self.train_y)
 
@@ -106,4 +107,4 @@ class Preprocessing:
         test_x, test_y, test_x_dates, test_y_dates = raw_train_x[train_len:], raw_train_y[train_len:], self.train_x_dates[train_len:], self.train_y_dates[train_len:]
         return train_x, train_y, test_x, test_y, train_x_dates, train_y_dates, test_x_dates, test_y_dates
 
-a = Preprocessing() # main1
+# a = Preprocessing() # main1

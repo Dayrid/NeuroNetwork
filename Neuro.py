@@ -1,10 +1,10 @@
 import tensorflow as tf
-
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
+
 
 # import main
 
@@ -60,7 +60,7 @@ class NeuroNetwork:
         self.model.compile(loss='mse', optimizer='Adam', metrics='mae')
 
         # Обучение
-        history = self.model.fit(train_x, train_y, epochs=2, batch_size=10, validation_split=0.2)
+        history = self.model.fit(train_x, train_y, epochs=75, batch_size=10, validation_split=0.2)
 
         # Вывод графика процесса обучения
         plot_train_history(history, "Процесс обучения")
@@ -93,7 +93,11 @@ class NeuroNetwork:
 
         print(mean_error / len(test_x))
         pass
+    def save(self, name):
+        self.model.save(name)
+
 
 # data = main.Preprocessing()
 # net = NeuroNetwork(data.train_x.shape[1:])
 # net.fit(data)
+# net.save('76279-5.h5')
