@@ -4,10 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
-tf.config.threading.set_inter_op_parallelism_threads(12)
-tf.config.threading.set_intra_op_parallelism_threads(12)
-
-import main
 
 
 def plot_train_history(history, title):
@@ -43,14 +39,15 @@ class NeuroNetwork:
             self.model.add(tf.keras.layers.Dense(30, input_shape=shape, activation='linear'))
 
             # Добавление скрытых слоёв
-            self.model.add(tf.keras.layers.SimpleRNN(150, activation='tanh', return_sequences=True))
-            self.model.add(tf.keras.layers.SimpleRNN(50, activation='tanh'))
+            self.model.add(tf.keras.layers.SimpleRNN(70, activation='sigmoid', return_sequences=True))
+            self.model.add(tf.keras.layers.SimpleRNN(150, activation='sigmoid', return_sequences=True))
+            self.model.add(tf.keras.layers.SimpleRNN(50, activation='sigmoid'))
 
             # Выходной слой
             self.model.add(tf.keras.layers.Dense(5, activation='linear'))
         pass
 
-    def fit(self, data):
+    def fit(self, data, epoch, batch_size, validation_split, optimizer):
         """
         Обучение нейросети
         """
@@ -58,10 +55,10 @@ class NeuroNetwork:
         train_x, train_y = data.train_x, data.train_y  # Создание тренировочной выборки
 
         # Выбор функции ошибки и метода оптимизации градиентного спуска
-        self.model.compile(loss='mse', optimizer='Adam', metrics='mae')
+        self.model.compile(loss='mse', optimizer=optimizer, metrics='mae')
 
         # Обучение
-        history = self.model.fit(train_x, train_y, epochs=100, batch_size=5, validation_split=0.2, use_multiprocessing = True)
+        history = self.model.fit(train_x, train_y, epochs=epoch, batch_size=batch_size, validation_split=validation_split)
 
         # Вывод графика процесса обучения
         plot_train_history(history, "Процесс обучения")
@@ -77,18 +74,18 @@ class NeuroNetwork:
         predict = predict * (min_max[0][1] - min_max[0][0]) + min_max[0][0]
         return predict
 
-    def test(self, test_x, test_y):
-        history = self.model.evaluate(test_x, test_y)
+    def test(self, data):
+        history = self.model.evaluate(data.test_x, data.test_y)
         print(history)
 
-        mean_error = np.array([0.0 for i in range(len(test_y[0]))])
+        mean_error = np.array([0.0 for i in range(len(data.test_y[0]))])
         print(mean_error.shape)
 
         print(mean_error)
 
-        for i in range(len(test_x)):
-            x = test_x[i]
-            y = test_y[i]
+        for i in range(len(data.test_x)):
+            x = data.test_x[i]
+            y = data.test_y[i]
             predict = self.denormalize(self.predict(x), data.min_max)
             y = self.denormalize(y, data.min_max)
             print("Predict:")
@@ -98,17 +95,21 @@ class NeuroNetwork:
             print("Error:")
             print(y - predict[0], end="\n==================\n")
             mean_error += abs(y - predict[0])
+            x = self.denormalize(x, data.min_max).T[0]
+            plt.plot(data.test_x_dates[i], x)
 
-        print(mean_error / len(test_x))
+            plt.plot(data.test_y_dates[i], y)
+            plt.plot(data.test_y_dates[i], predict[0])
+
+            plt.legend(['До', 'Реальные значения', 'Прогноз'])
+            plt.xticks(rotation=45)
+            plt.show()
+
+        print(mean_error / len(data.test_x))
         pass
 
     def save(self, name):
         self.model.save(name)
 
 
-data = main.Preprocessing()
-net = NeuroNetwork(data.train_x.shape[1:])
-net.fit(data)
-net.test(data.test_x, data.test_y)
-if input("Сохранить модель? +/-") == "+":
-    net.save('76289-3.h5')
+
