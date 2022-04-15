@@ -30,5 +30,5 @@ class Imputers:
         self.df['Код параметра'] = 1
         print(f"Восстановление методом {method} завершено.")
         # Выгрузка результатов восстановления в эксель
-        self.df.to_excel('after_restore_' + method + '.xlsx', method)
+        # self.df.to_excel('after_restore_' + method + '.xlsx', method)
         return self.df

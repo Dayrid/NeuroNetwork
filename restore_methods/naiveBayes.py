@@ -42,7 +42,7 @@ class NaiveBayes:
                     df.loc[i, 'Код параметра'] = 1
         print("Восстановление методом Наивного Байеса завершено.")
         # Выгрузка результатов восстановления в эксель
-        df.to_excel('after_restore.xlsx', 'Naive Bayes')
+        # df.to_excel('after_restore.xlsx', 'Naive Bayes')
         return df
 
     @staticmethod
