@@ -13,10 +13,6 @@ pd.options.display.max_rows = None
 class Preprocessing:
     def __init__(self):
         self.params = self.config('Settings.ini')
-        self.params['selectedcols'] = self.params['selectedcols'].split(',')
-        self.params['selection_size'] = int(self.params['selection_size'])
-        self.params['predict_size'] = int(self.params['predict_size'])
-        self.params['test_selection_size'] = float(self.params['test_selection_size'])
         if self.params['sql_reading'].lower() == 'on':
             sql = SQL.SQL(self.params['hydropost'])
             df = sql.df
@@ -37,6 +33,7 @@ class Preprocessing:
         dfs = pd.read_excel(filename, sheet_name='Уровни', engine='openpyxl')
         dfs = dfs[dfs['Код поста'] == int(self.params['hydropost'])]
         dfs = dfs.sort_values('Дата - время')
+        dfs = dfs.sort_values('Дата - время')
         return dfs
 
     @staticmethod
@@ -44,6 +41,10 @@ class Preprocessing:
         config = configparser.ConfigParser()
         config.read(name, encoding="utf-8")
         array = dict(config.items('Settings'))
+        array['selectedcols'] = array['selectedcols'].split(',')
+        array['selection_size'] = int(array['selection_size'])
+        array['predict_size'] = int(array['predict_size'])
+        array['test_selection_size'] = float(array['test_selection_size'])
         return array
 
     def normalize(self):
@@ -106,4 +107,6 @@ class Preprocessing:
         test_x, test_y, test_x_dates, test_y_dates = raw_train_x[train_len:], raw_train_y[train_len:], self.train_x_dates[train_len:], self.train_y_dates[train_len:]
         return train_x, train_y, test_x, test_y, train_x_dates, train_y_dates, test_x_dates, test_y_dates
 
-# a = Preprocessing() # main1
+# a = Preprocessing()
+# for i in range(len(a.train_x_dates)):
+#     print(a.train_x_dates[i], a.train_y_dates[i])

@@ -14,7 +14,7 @@ class NaiveBayes:
     def naive_bayes_method(self, df):
         df = df.sort_values(by=['Дата - время'])
         df = df.reset_index(drop=True)
-        df.to_excel('before_restore.xlsx')
+        # df.to_excel('before_restore.xlsx')
         dates_list = df['Дата - время'].tolist()
         dates_list = [str(i).split(' ')[0] for i in dates_list]
         day_num_list = [int(datetime.datetime.strptime(i, "%Y-%m-%d").strftime("%j")) for i in dates_list]

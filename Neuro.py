@@ -2,6 +2,7 @@ import tensorflow as tf
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
+from main import Preprocessing
 import os
 import pandas as pd
 
@@ -29,7 +30,7 @@ class NeuroNetwork:
         Конструктор класса нейросети.
         :param filename: расположение файла с моделью нейросети
         """
-
+        self.params = Preprocessing.config("Settings.ini")
         if filename is not None:
             self.model = tf.keras.models.load_model(filename)  # Создание модели через файл
         else:
@@ -39,8 +40,8 @@ class NeuroNetwork:
             self.model.add(tf.keras.layers.Dense(30, input_shape=shape, activation='linear'))
 
             # Добавление скрытых слоёв
-            self.model.add(tf.keras.layers.SimpleRNN(70, activation='sigmoid', return_sequences=True))
-            self.model.add(tf.keras.layers.SimpleRNN(150, activation='sigmoid', return_sequences=True))
+            self.model.add(tf.keras.layers.SimpleRNN(50, activation='sigmoid', return_sequences=True))
+            self.model.add(tf.keras.layers.SimpleRNN(100, activation='sigmoid', return_sequences=True))
             self.model.add(tf.keras.layers.SimpleRNN(50, activation='sigmoid'))
 
             # Выходной слой
@@ -65,7 +66,7 @@ class NeuroNetwork:
         pass
 
     def predict(self, data):
-        data = np.array(data).reshape((1, 6, 2))
+        data = np.array(data).reshape((1, self.params['selection_size'], len(self.params['selectedcols'])))
         return self.model.predict(data)
 
     @staticmethod
