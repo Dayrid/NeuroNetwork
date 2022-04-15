@@ -6,16 +6,21 @@ import json
 import datetime
 import numpy as np
 
+
 def normalize(data, min_max):
     min_max = min_max.T
     min_arr = np.array([min(min_max[i]) for i in range(len(min_max))])
     max_arr = np.array([max(min_max[i]) for i in range(len(min_max))])
     data = (data - min_arr) / (max_arr - min_arr)
     return data
+
+
 def denormalize(predict, min_max):
     min_max = min_max.T
     predict = predict*(min_max[0][1] - min_max[0][0]) + min_max[0][0]
     return predict
+
+
 def Predict(json_settings):
     sql_cfg = cfg("db.ini")
     con = pymysql.connect(host=sql_cfg['hostname'], port=int(sql_cfg['port']), user=sql_cfg['username'],
@@ -47,13 +52,15 @@ def Predict(json_settings):
     print(full_predict)
 
 
-
 def cfg(filename):
     config = configparser.ConfigParser()
     config.read(filename, encoding="utf-8")
     data = dict(config.items('SQL'))
     return data
 
+import datetime as t
+
+s = t.datetime.now()
 
 json_data = """
 {
@@ -66,3 +73,6 @@ json_data = """
 }
 """
 Predict(json_data)
+
+
+print(t.datetime.now() - s)
