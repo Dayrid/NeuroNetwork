@@ -107,6 +107,7 @@ class Preprocessing:
         test_x, test_y, test_x_dates, test_y_dates = raw_train_x[train_len:], raw_train_y[train_len:], self.train_x_dates[train_len:], self.train_y_dates[train_len:]
         return train_x, train_y, test_x, test_y, train_x_dates, train_y_dates, test_x_dates, test_y_dates
 
+
 # a = Preprocessing()
 # for i in range(len(a.train_x_dates)):
-#     print(a.train_x_dates[i], a.train_y_dates[i])
+#     print(i, a.train_x_dates[i], a.train_y_dates[i])

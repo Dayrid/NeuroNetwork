@@ -40,9 +40,9 @@ class NeuroNetwork:
             self.model.add(tf.keras.layers.Dense(30, input_shape=shape, activation='linear'))
 
             # Добавление скрытых слоёв
-            self.model.add(tf.keras.layers.SimpleRNN(50, activation='sigmoid', return_sequences=True))
-            self.model.add(tf.keras.layers.SimpleRNN(100, activation='sigmoid', return_sequences=True))
-            self.model.add(tf.keras.layers.SimpleRNN(50, activation='sigmoid'))
+            self.model.add(tf.keras.layers.SimpleRNN(80, activation='sigmoid', return_sequences=True))
+            self.model.add(tf.keras.layers.SimpleRNN(160, activation='sigmoid', return_sequences=True))
+            self.model.add(tf.keras.layers.SimpleRNN(80, activation='sigmoid'))
 
             # Выходной слой
             self.model.add(tf.keras.layers.Dense(5, activation='linear'))
@@ -94,6 +94,7 @@ class NeuroNetwork:
             print("Real")
             print(y)
             print("Error:")
+            print(y, predict[0])
             print(y - predict[0], end="\n==================\n")
             mean_error += abs(y - predict[0])
             x = self.denormalize(x, data.min_max).T[0]
@@ -104,7 +105,7 @@ class NeuroNetwork:
 
             plt.legend(['До', 'Реальные значения', 'Прогноз'])
             plt.xticks(rotation=45)
-            plt.show()
+            # plt.show()
 
         print(mean_error / len(data.test_x))
         pass

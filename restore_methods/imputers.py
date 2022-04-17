@@ -17,11 +17,11 @@ class Imputers:
         if method == 'knn':
             model = KNNImputer(n_neighbors=self.k, missing_values=np.nan)
             imputed_data = model.fit_transform(data_for_restore)
-        # elif method == 'mean':
-        #     model = SimpleImputer(missing_values=np.nan, strategy='median', verbose=0)
+        elif method == 'mean':
+            model = SimpleImputer(missing_values=np.nan, strategy='median', verbose=0)
             imputed_data = model.fit(data_for_restore).transform(data_for_restore)
         elif method == 'iter':
-            model = IterativeImputer(random_state=0, initial_strategy='median', missing_values=np.nan)
+            model = IterativeImputer(random_state=0, initial_strategy='most_frequent', missing_values=np.nan)
             imputed_data = model.fit_transform(data_for_restore)
         restored_data = imputed_data.T.tolist()
         for col in self.cfg['selectedcols']:
@@ -30,5 +30,5 @@ class Imputers:
         self.df['Код параметра'] = 1
         print(f"Восстановление методом {method} завершено.")
         # Выгрузка результатов восстановления в эксель
-        # self.df.to_excel('after_restore_' + method + '.xlsx', method)
+        self.df.to_excel('after_restore_' + method + '.xlsx', method)
         return self.df

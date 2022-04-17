@@ -8,15 +8,19 @@ import numpy as np
 
 
 def normalize(data, min_max):
-    min_max = min_max.T
-    min_arr = np.array([min(min_max[i]) for i in range(len(min_max))])
-    max_arr = np.array([max(min_max[i]) for i in range(len(min_max))])
-    data = (data - min_arr) / (max_arr - min_arr)
+    if len(min_max) > 1:
+        min_max = min_max.T
+        min_arr = np.array([min(min_max[i]) for i in range(len(min_max))])
+        max_arr = np.array([max(min_max[i]) for i in range(len(min_max))])
+        data = (data - min_arr) / (max_arr - min_arr)
+    else:
+        data = (data - min_max[0][0]) / (min_max[0][1] - min_max[0][0])
     return data
 
 
 def denormalize(predict, min_max):
-    min_max = min_max.T
+    if len(min_max) > 1:
+        min_max = min_max.T
     predict = predict*(min_max[0][1] - min_max[0][0]) + min_max[0][0]
     return predict
 
@@ -30,11 +34,10 @@ def Predict(json_settings):
     json_settings = json.loads(json_settings)
     start_date = datetime.datetime.strptime(json_settings['end_date'], '%Y-%m-%d')
     start_date -= datetime.timedelta(days=int(json_settings['selection_size']) - 1)
-    query = f"SELECT `Уровень воды`, `Температура воздуха` FROM `{sql_cfg['table']}` WHERE `Код поста` = {json_settings['hydropost']} AND `Дата - время` BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{json_settings['end_date']}'"
+    query = f"SELECT `Уровень воды` FROM `{sql_cfg['table']}` WHERE `Код поста` = {json_settings['hydropost']} AND `Дата - время` BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{json_settings['end_date']}'"
     cur.execute(query)
     data = np.array(cur.fetchall())
-    print(data)
-    query = f"SELECT MIN(`Уровень воды`), MIN(`Температура воздуха`) as min, MAX(`Уровень воды`), MAX(`Температура воздуха`) as max FROM `{sql_cfg['table']}` WHERE `Код поста` = {json_settings['hydropost']}"
+    query = f"SELECT MIN(`Уровень воды`) as min, MAX(`Уровень воды`) as max FROM `{sql_cfg['table']}` WHERE `Код поста` = {json_settings['hydropost']}"
     cur.execute(query)
     min_max = np.array(cur.fetchall())
     min_max = min_max.reshape((len(min_max[0])//2, 2))
@@ -42,7 +45,6 @@ def Predict(json_settings):
     net = Neuro.NeuroNetwork(data.shape, json_settings["model_path"])
     predict = net.predict(data)
     predict = denormalize(predict, min_max)
-    print(predict)
     full_predict = []
     if json_settings['id'] != -1:
         end_date = datetime.datetime.strptime(json_settings['end_date'], '%Y-%m-%d')
@@ -64,12 +66,12 @@ s = t.datetime.now()
 
 json_data = """
 {
-	"hydropost" : 76289,
-	"end_date" : "2021-04-15",
+	"hydropost" : 76288,
+	"end_date" : "2022-04-15",
 	"selection_size" : 6,
 	"predict_size" : 5,
-	"id" : 123,
-	"model_path" : "76289-5.h5"
+	"id" : 1,
+	"model_path" : "76289-5.h5.h5"
 }
 """
 Predict(json_data)
