@@ -20,7 +20,6 @@ class Preprocessing:
             df = self.xlsx_read(self.params['pathtofile'])
         restoring = restore_data.DataRestore(df, self.params)
         self.raw_data = restoring.raw_data
-        # print(self.raw_data.tail(11))
         self.min_max = []
         self.normalize()
         self.train_x, self.x_full_data, self.train_y, self.y_full_data, self.train_x_dates, self.train_y_dates = self.cube_formation()
@@ -50,7 +49,6 @@ class Preprocessing:
     def normalize(self):
         max = np.array(self.raw_data[self.params['selectedcols']].max().values.tolist())
         min = np.array(self.raw_data[self.params['selectedcols']].min().values.tolist())
-        print(min, max)
         self.raw_data[self.params['selectedcols']] = (self.raw_data[self.params['selectedcols']] - min) / (max - min)
         self.min_max += [min, max]
 

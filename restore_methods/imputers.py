@@ -12,8 +12,10 @@ class Imputers:
 
     def impute(self, method):
         imputed_data = None
-        cutted_df = self.df[self.cfg['selectedcols']]
-        data_for_restore = np.array(cutted_df.values.tolist())
+        data_for_restore = self.df[self.cfg['selectedcols']].values
+        # cutted_df = self.df[self.cfg['selectedcols']]
+        # data_for_restore = np.array(cutted_df.values.tolist())
+
         if method == 'knn':
             model = KNNImputer(n_neighbors=self.k, missing_values=np.nan)
             imputed_data = model.fit_transform(data_for_restore)
@@ -30,5 +32,5 @@ class Imputers:
         self.df['Код параметра'] = 1
         print(f"Восстановление методом {method} завершено.")
         # Выгрузка результатов восстановления в эксель
-        self.df.to_excel('after_restore_' + method + '.xlsx', method)
+        # self.df.to_excel('after_restore_' + method + '.xlsx', method)
         return self.df

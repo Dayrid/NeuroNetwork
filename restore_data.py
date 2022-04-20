@@ -21,7 +21,7 @@ class DataRestore:
         else:
             print('Восстановление данных отключено.')
         self.raw_data = new_df
-        # self.raw_data = self.dates_selection(self.raw_data)
+        self.raw_data = self.dates_selection(self.raw_data)
 
     @staticmethod
     def cutting(df, params):
